@@ -1,0 +1,7 @@
+/src/cache_dir
+/src/models
+/src/outputs
+/src/data/news2/dataset
+/src/data/news1/dataset
+/env
+/.vscode
