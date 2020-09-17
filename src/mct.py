@@ -19,5 +19,17 @@ def clean_text(text, max_len=128):
     return ' '.join(filtered_words)[0:max_len-1].lower()
 
 
+def read_data(path, test_size_split=0.15):
+    df = pd.read_csv(path)
+
+    train_df, eval_df = train_test_split(df, test_size=test_size_split)
+
+    return train_df, eval_df
+
+
+def main():
+    train_df, eval_df = read_data('./data/news2/dataset/dataset_proccesed.csv')
+
+
 if __name__ == '__main__':
-    pass
+    main()
