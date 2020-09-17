@@ -11,15 +11,18 @@ with open('dataset/dataset.json', 'r', encoding='utf-8') as file:
 
 categories = {}
 
+i = 0
 for line in lines:
     obj = json.loads(line)
     category = obj['category']
+    obj['id'] = i
+    i += 1
 
     if category in classes:
         if category in categories:
             categories[category].append(obj)
         else:
-            categories[category] = []
+            categories[category] = [obj]
 
 for category, content in categories.items():
     f = open(f'categories/{category}.txt', 'w', encoding='utf-8')
