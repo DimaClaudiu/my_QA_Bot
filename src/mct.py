@@ -35,16 +35,33 @@ def build_model():
     return model
 
 
-def main():
-    train_df, eval_df = read_data('./data/news2/dataset/dataset_proccesed.csv')
+def predict(model, question, mappings):
+    inpt = clean_text(question)
+    predictions, raw_outputs = model.predict([inpt])
 
+    return mappings[predictions[0]]
+
+
+def main():
+    # Read data and build model
+    train_df, eval_df = read_data('./data/news2/dataset/dataset_proccesed.csv')
     model = build_model()
 
+    # Train model
     model.train_model(train_df)
 
+    # Evaluate after training
     result, model_outputs, wrong_predictions = model.eval_model(eval_df)
-
     print(result)
+
+    # Infer on any question
+    with open('data/news2/classes.json') as json_file:
+        mappings = json.load(json_file)
+        inv_map = {v: k for k, v in mappings.items()}
+
+    print("Ready to roll")
+    while True:
+        print(predict(model, input(), inv_map))
 
 
 if __name__ == '__main__':
