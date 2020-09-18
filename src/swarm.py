@@ -1,30 +1,18 @@
-from collections import OrderedDict, namedtuple
-from farm.infer import QAInferencer
-from farm.data_handler.inputs import QAInput, Question
-from farm.modeling.predictions import QAPred, QACandidate
-import numpy as np
-from scipy.special import expit
-
-
-from simpletransformers.classification import ClassificationModel
-import pandas as pd
-from sklearn.model_selection import train_test_split
-
-import json
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem.porter import PorterStemmer
-import random
-import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
 import ast
-
-from simpletransformers.question_answering import QuestionAnsweringModel
-from sklearn.model_selection import train_test_split
 import json
 import os
-import logging
-import ast
+import random
+from collections import OrderedDict
+
+import numpy as np
+import pandas as pd
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+from nltk.tokenize import word_tokenize
+from simpletransformers.classification import ClassificationModel
+from simpletransformers.question_answering import QuestionAnsweringModel
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
 
 
 def clean_text(text, max_len=128):
@@ -68,8 +56,6 @@ def get_best_docs(question, paragraphs, top_k):
     )
 
     df = pd.DataFrame.from_dict(paragraphs)
-
-    print(df)
 
     tfidf_matrix = vectorizer.fit_transform(df["text"])
 
