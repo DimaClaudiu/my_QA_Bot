@@ -14,6 +14,8 @@ from simpletransformers.question_answering import QuestionAnsweringModel
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 
+from reader.reader import Reader
+
 
 def clean_text(text, max_len=128):
     stop_words = set(stopwords.words('english'))
@@ -98,7 +100,7 @@ def main():
 
     labels = get_labels()
     ranker = build_ranker_model(num_labels=len(labels))
-    reader = build_reader_model()
+    reader = Reader(model_path='models/QA')
 
     # Infer on any question
     print("Ready to roll")
@@ -119,13 +121,8 @@ def main():
 
             ranked_contexts = get_best_contexts(question, contexts, 5)
             for context in ranked_contexts:
-                qc = [{'context': context['text'], 'qas': [
-                    {'question': question, 'id': '0'}]}]
-
-                result = reader.predict(qc, 3)
-
-                answers = result[0]
-                probabilities = result[1]
+                answers, probabilities = reader.predict(
+                    question, context['text'])
 
                 for i in range(len(answers)):
                     pair = answers[i]
