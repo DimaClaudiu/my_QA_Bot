@@ -47,14 +47,14 @@ def predict(model, question, mappings):
     return mappings[predictions[0]]
 
 
-def get_best_docs(question, paragraphs, top_k):
+def get_best_contexts(question, contexts, top_k):
     vectorizer = TfidfVectorizer(
         lowercase=True,
         stop_words='english',
         ngram_range=(1, 1),
     )
 
-    df = pd.DataFrame.from_dict(paragraphs)
+    df = pd.DataFrame.from_dict(contexts)
 
     tfidf_matrix = vectorizer.fit_transform(df["text"])
 
@@ -69,15 +69,14 @@ def get_best_docs(question, paragraphs, top_k):
     df_sliced = df.loc[indices_and_scores.keys()]
     df_sliced = df_sliced[:top_k]
 
-    paragraphs = list(df_sliced.text.values)
-    meta_data = [{"date": row["date"]}
-                 for idx, row in df_sliced.iterrows()]
+    conte = list(df_sliced.text.values)
+    meta_data = [{"date": row["date"]} for _, row in df_sliced.iterrows()]
 
-    documents = []
-    for para, meta in zip(paragraphs, meta_data):
-        documents.append(para)
+    ranked_contexts = []
+    for para, meta in zip(contexts, meta_data):
+        ranked_contexts.append(para)
 
-    return documents
+    return ranked_contexts
 
 
 def get_labels():
@@ -94,7 +93,6 @@ def main():
     model = build_model(num_labels=len(labels))
 
     # Infer on any question
-
     print("Ready to roll")
     while True:
         question = input()
@@ -111,7 +109,7 @@ def main():
 
             print(len(contexts))
 
-            docs = get_best_docs(question, contexts, 5)
+            ranked_contexts = get_best_contexts(question, contexts, 5)
 
 
 if __name__ == '__main__':
