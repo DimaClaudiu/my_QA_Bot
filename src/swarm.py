@@ -60,7 +60,7 @@ def predict(model, question, mappings):
     return mappings[predictions[0]]
 
 
-def get_best_docs(question, paragraphs):
+def get_best_docs(question, paragraphs, top_k):
     vectorizer = TfidfVectorizer(
         lowercase=True,
         stop_words='english',
@@ -82,10 +82,10 @@ def get_best_docs(question, paragraphs):
     )
 
     df_sliced = df.loc[indices_and_scores.keys()]
-    df_sliced = df_sliced[:10]
+    df_sliced = df_sliced[:top_k]
 
     paragraphs = list(df_sliced.text.values)
-    meta_data = [{"context_id": row["context_id"]}
+    meta_data = [{"date": row["date"]}
                  for idx, row in df_sliced.iterrows()]
 
     documents = []
@@ -109,23 +109,17 @@ def main():
         doc = predict(model, question, inv_map)
         print(doc)
 
-        paraf = []
-        with open('data/news2/categories/' + doc + '.txt', 'r', encoding='utf-8') as f:
+        contexts = []
+        with open('data/news2/split_contexts/' + doc + '.txt', 'r', encoding='utf-8') as f:
             lines = f.readlines()
-            text = ""
+
             for line in lines:
-                obj = ast.literal_eval(line)
-                text += obj['headline'] + " " + obj['short_description'] + '\n'
+                context = ast.literal_eval(line)
+                contexts.append(context)
 
-            n = 1000
-            for i in range(int(len(text)/n) - 1):
-                txt = text[i*n:(i+1)*n]
-                par = {'context_id': i, 'text': txt}
-                paraf.append(par)
+            print(len(contexts))
 
-            print(len(paraf))
-
-            docs = get_best_docs(question, paraf)
+            docs = get_best_docs(question, contexts, 5)
 
             for doc in docs:
                 print(doc)
