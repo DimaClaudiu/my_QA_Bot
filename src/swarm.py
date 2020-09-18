@@ -6,25 +6,12 @@ from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
-from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
-from nltk.tokenize import word_tokenize
-from simpletransformers.classification import ClassificationModel
-from simpletransformers.question_answering import QuestionAnsweringModel
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 
 from reader.reader import Reader
-
-
-def clean_text(text, max_len=128):
-    stop_words = set(stopwords.words('english'))
-    word_tokens = word_tokenize(text)
-    words = [word for word in word_tokens if word.isalpha()]
-
-    filtered_words = [w for w in words if not w in stop_words]
-
-    return ' '.join(filtered_words)[0:max_len-1].lower()
+from classifier.classifier import Classifier
 
 
 def read_data(path, test_size_split=0.15):
@@ -33,27 +20,6 @@ def read_data(path, test_size_split=0.15):
     train_df, eval_df = train_test_split(df, test_size=test_size_split)
 
     return train_df, eval_df
-
-
-def build_ranker_model(num_labels):
-    model = ClassificationModel(
-        'roberta', './outputs/checkpoint-35624-epoch-2', num_labels=num_labels)
-
-    return model
-
-
-def build_reader_model():
-    model = QuestionAnsweringModel(
-        'roberta', 'models/QA', args={'reprocess_input_data': True})
-
-    return model
-
-
-def get_group(model, question, mappings):
-    inpt = clean_text(question)
-    predictions, raw_outputs = model.predict([inpt])
-
-    return mappings[predictions[0]]
 
 
 def get_best_contexts(question, contexts, top_k):
@@ -99,14 +65,14 @@ def get_labels():
 def main():
 
     labels = get_labels()
-    ranker = build_ranker_model(num_labels=len(labels))
+    ranker = Classifier(model_path='models/MCT', num_labels=len(labels))
     reader = Reader(model_path='models/QA')
 
     # Infer on any question
     print("Ready to roll")
     while True:
         question = input()
-        group = get_group(ranker, question, labels)
+        group = ranker.predict(question, labels)
         print(group)
 
         contexts = []
