@@ -33,10 +33,9 @@ def read_data(path, test_size_split=0.15):
     return train_df, eval_df
 
 
-def build_model():
-    model = ClassificationModel('roberta', './outputs/checkpoint-35624-epoch-2', num_labels=10, args={
-        'learning_rate': 1e-5, 'num_train_epochs': 4, 'reprocess_input_data': False, 'overwrite_output_dir': True, "train_batch_size": 22,
-        "eval_batch_size": 22, "save_steps": 3000, })
+def build_model(num_labels):
+    model = ClassificationModel(
+        'roberta', './outputs/checkpoint-35624-epoch-2', num_labels=num_labels)
 
     return model
 
@@ -90,14 +89,16 @@ def get_labels():
 
 
 def main():
-    model = build_model()
+
+    labels = get_labels()
+    model = build_model(num_labels=len(labels))
 
     # Infer on any question
 
     print("Ready to roll")
     while True:
         question = input()
-        doc = predict(model, question, get_labels())
+        doc = predict(model, question, labels)
         print(doc)
 
         contexts = []
