@@ -33,9 +33,16 @@ def read_data(path, test_size_split=0.15):
     return train_df, eval_df
 
 
-def build_model(num_labels):
+def build_ranker_model(num_labels):
     model = ClassificationModel(
         'roberta', './outputs/checkpoint-35624-epoch-2', num_labels=num_labels)
+
+    return model
+
+
+def build_reader_model():
+    model = QuestionAnsweringModel(
+        'roberta', 'models/QA', args={'reprocess_input_data': True})
 
     return model
 
@@ -90,13 +97,14 @@ def get_labels():
 def main():
 
     labels = get_labels()
-    model = build_model(num_labels=len(labels))
+    ranker = build_ranker_model(num_labels=len(labels))
+    reader = build_reader_model()
 
     # Infer on any question
     print("Ready to roll")
     while True:
         question = input()
-        doc = predict(model, question, labels)
+        doc = predict(ranker, question, labels)
         print(doc)
 
         contexts = []
@@ -110,6 +118,12 @@ def main():
             print(len(contexts))
 
             ranked_contexts = get_best_contexts(question, contexts, 5)
+            for context in ranked_contexts:
+                qc = [{'context': context['text'], 'qas': [
+                    {'question': question, 'id': '0'}]}]
+
+                result = reader.predict(qc)
+                print(result)
 
 
 if __name__ == '__main__':
