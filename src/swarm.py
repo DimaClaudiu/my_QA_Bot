@@ -47,7 +47,7 @@ def build_reader_model():
     return model
 
 
-def predict(model, question, mappings):
+def get_group(model, question, mappings):
     inpt = clean_text(question)
     predictions, raw_outputs = model.predict([inpt])
 
@@ -104,11 +104,11 @@ def main():
     print("Ready to roll")
     while True:
         question = input()
-        doc = predict(ranker, question, labels)
-        print(doc)
+        group = get_group(ranker, question, labels)
+        print(group)
 
         contexts = []
-        with open('data/news2/split_contexts/' + doc + '.txt', 'r', encoding='utf-8') as f:
+        with open('data/news2/split_contexts/' + group + '.txt', 'r', encoding='utf-8') as f:
             lines = f.readlines()
 
             for line in lines:
@@ -122,8 +122,17 @@ def main():
                 qc = [{'context': context['text'], 'qas': [
                     {'question': question, 'id': '0'}]}]
 
-                result = reader.predict(qc)
-                print(result)
+                result = reader.predict(qc, 3)
+
+                answers = result[0]
+                probabilities = result[1]
+
+                for i in range(len(answers)):
+                    pair = answers[i]
+                    for j in range(len(pair['answer'])):
+                        print(pair['id'] + ": " + pair['answer']
+                              [j] + " - " + str(probabilities[i]['probability'][j]))
+                print('\n')
 
 
 if __name__ == '__main__':
