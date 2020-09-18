@@ -81,18 +81,23 @@ def get_best_docs(question, paragraphs, top_k):
     return documents
 
 
-def main():
-    model = build_model()
-
-    # Infer on any question
+def get_labels():
     with open('data/news2/classes.json') as json_file:
         mappings = json.load(json_file)
         inv_map = {v: k for k, v in mappings.items()}
 
+    return inv_map
+
+
+def main():
+    model = build_model()
+
+    # Infer on any question
+
     print("Ready to roll")
     while True:
         question = input()
-        doc = predict(model, question, inv_map)
+        doc = predict(model, question, get_labels())
         print(doc)
 
         contexts = []
@@ -106,10 +111,6 @@ def main():
             print(len(contexts))
 
             docs = get_best_docs(question, contexts, 5)
-
-            for doc in docs:
-                print(doc)
-                print('#################')
 
 
 if __name__ == '__main__':
