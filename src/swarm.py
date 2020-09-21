@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 
 from classifier.classifier import Classifier
-from ranker.ranker import Ranker
+from ranker.tfidfRanker import TfidfRanker
 from reader.reader import Reader
 
 
@@ -29,7 +29,7 @@ def main():
     labels = get_labels()
 
     classifier = Classifier(model_path='models/MCT', num_labels=len(labels))
-    ranker = Ranker()
+    ranker = TfidfRanker()
     reader = Reader(model_path='models/QA')
 
     # Infer on any question
