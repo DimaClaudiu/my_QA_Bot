@@ -4,7 +4,7 @@ Natural language search through a large knowledge base(KB).
 
 ## Components
 
-So far, the pipeline is mainly split in
+So far, the pipeline is mainly split in:
 
 
 1. **Categorical contexts**: The knowledge base is assumed to be clustered in a finite number of classes. <br>
@@ -18,8 +18,8 @@ For example, chats groups are categorized per teams and actions:
 Each of those represents a subdomain of our KB.
 
 For now, they are stored in independent text files. But any database solution can easily replace this component. 
----
 
+---
 2. **Classifier**: A model that helps narrow the searching field by offering the most likely sub-domain of any given question.
 Examples:
 
@@ -58,7 +58,7 @@ This model should score that context pretty highly since a banana is indeed a fr
 BM25 could be also used for a fast and reliable ranker.
 
 ---
-4. **Reader**: The last components is an extractive, closed domain, Question Answer Model.<br>
+4. **Reader**: The last component is an extractive, closed domain, Question Answer Model.<br>
 It receives a context and a question and extracts the answer.<br>
 
 This model is also a fine-tunned RoBERTa-base for Question-Answering.<br>
