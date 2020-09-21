@@ -58,9 +58,8 @@ def main():
                 answer, probability = reader.predict(
                     question, context['text'])
 
-                print(answer)
-                print(probability)
-                print('\n')
+                if answer != '':
+                    print(f'{answer} - {probability}\n')
 
 
 if __name__ == '__main__':
