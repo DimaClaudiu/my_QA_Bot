@@ -26,9 +26,6 @@ class PtReader(Reader):
         answer = self.tokenizer.convert_tokens_to_string(
             self.tokenizer.convert_ids_to_tokens(input_ids[answer_start:answer_end]))
 
-        print(answer)
-        print(type(answer))
-
         probabilities = []
 
         for start_score in answer_start_scores.cpu().detach().numpy():
