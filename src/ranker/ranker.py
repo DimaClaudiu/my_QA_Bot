@@ -9,5 +9,5 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 class Ranker(ABC):
 
     @abstractmethod
-    def get_best_contexts(self, question, contexts, top_k):
+    def rank(self, question, contexts, top_k):
         pass

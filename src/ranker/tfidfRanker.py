@@ -16,7 +16,7 @@ class TfidfRanker(Ranker):
             ngram_range=(1, 1),
         )
 
-    def get_best_contexts(self, question, contexts, top_k):
+    def rank(self, question, contexts, top_k):
 
         df = pd.DataFrame.from_dict(contexts)
 
