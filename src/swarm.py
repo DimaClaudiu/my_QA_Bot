@@ -3,7 +3,7 @@ import json
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-from classifier.classifier import Classifier
+from classifier.StClassifier import StClassifier
 from ranker.tfidfRanker import TfidfRanker
 from reader.StReader import StReader
 from reader.PtReader import PtReader
@@ -29,11 +29,9 @@ def main():
 
     labels = get_labels()
 
-    classifier = Classifier(model_path='models/MCT', num_labels=len(labels))
+    classifier = StClassifier(model_path='models/MCT', num_labels=len(labels))
     ranker = TfidfRanker()
-    # reader = StReader(model_path='models/QA')
-    reader = PtReader(
-        model_path='models/QA')
+    reader = PtReader(model_path='models/QA')
 
     # Infer on any question
     print("Ready to roll")
