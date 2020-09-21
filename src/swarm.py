@@ -5,7 +5,8 @@ import pandas as pd
 
 from classifier.classifier import Classifier
 from ranker.tfidfRanker import TfidfRanker
-from reader.reader import Reader
+from reader.StReader import StReader
+from reader.PtReader import PtReader
 
 
 def read_data(path, test_size_split=0.15):
@@ -30,7 +31,9 @@ def main():
 
     classifier = Classifier(model_path='models/MCT', num_labels=len(labels))
     ranker = TfidfRanker()
-    reader = Reader(model_path='models/QA')
+    # reader = StReader(model_path='models/QA')
+    reader = PtReader(
+        model_path='models/QA')
 
     # Infer on any question
     print("Ready to roll")
@@ -49,17 +52,14 @@ def main():
 
             print(len(contexts))
 
-            ranked_contexts = ranker.get_best_contexts(question, contexts, 5)
+            ranked_contexts = ranker.rank(question, contexts, 5)
 
             for context in ranked_contexts:
-                answers, probabilities = reader.predict(
+                answer, probability = reader.predict(
                     question, context['text'])
 
-                for i in range(len(answers)):
-                    pair = answers[i]
-                    for j in range(len(pair['answer'])):
-                        print(pair['id'] + ": " + pair['answer']
-                              [j] + " - " + str(probabilities[i]['probability'][j]))
+                print(answer)
+                print(probability)
                 print('\n')
 
 
