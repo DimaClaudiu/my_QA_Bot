@@ -73,23 +73,23 @@ The model performs great, but it's quite slow. That's why the previous component
 ## References:
 
 ### APIs & Implementations
-Transformers library: https://github.com/huggingface/transformers
-API for fast NLP prototyping: https://github.com/ThilinaRajapakse/simpletransformers
-
-DPR implementation: https://github.com/facebookresearch/DPR
+Transformers library: https://github.com/huggingface/transformers<br>
+API for fast NLP prototyping: https://github.com/ThilinaRajapakse/simpletransformers<br>
+<br>
+DPR implementation: https://github.com/facebookresearch/DPR<br>
 
 ### Papers
-Attention is all you need paper for BERT: https://arxiv.org/abs/1706.03762
-RoBERTa paper: https://arxiv.org/abs/1907.11692
+Attention is all you need paper for BERT: https://arxiv.org/abs/1706.03762<br>
+RoBERTa paper: https://arxiv.org/abs/1907.11692<br>
 
-DPR paper: https://arxiv.org/abs/2004.04906facebook 
+DPR paper: https://arxiv.org/abs/2004.04906facebook <br>
 
 ### Articles
-BERT for QA: https://medium.com/saarthi-ai/build-a-smart-question-answering-system-with-fine-tuned-bert-b586e4cfa5f5
-Architecture comparison: https://towardsdatascience.com/bert-roberta-distilbert-xlnet-which-one-to-use-3d5ab82ba5f8
+BERT for QA: https://medium.com/saarthi-ai/build-a-smart-question-answering-system-with-fine-tuned-bert-b586e4cfa5f5<br>
+Architecture comparison: https://towardsdatascience.com/bert-roberta-distilbert-xlnet-which-one-to-use-3d5ab82ba5f8<br>
 
 ### Datasets
-SQUaD and SQuAD2: https://rajpurkar.github.io/SQuAD-explorer/
-News dataset: https://www.kaggle.com/rmisra/news-category-dataset
+SQUaD and SQuAD2: https://rajpurkar.github.io/SQuAD-explorer/<br>
+News dataset: https://www.kaggle.com/rmisra/news-category-dataset<br>
 
 
