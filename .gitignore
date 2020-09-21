@@ -9,3 +9,9 @@
 /src/data/news2/split_contexts
 /src/_try
 /src/__pycache__
+/src/classifier/__pycache__
+/src/ranker/__pycache__
+/src/reader/__pycache__
+/src/data/squad2/train_clean.json
+/src/data/squad2/train.json
+/src/data/squad2/clean_train.txt
