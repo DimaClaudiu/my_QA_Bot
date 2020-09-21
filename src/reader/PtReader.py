@@ -26,12 +26,18 @@ class PtReader(Reader):
         answer = self.tokenizer.convert_tokens_to_string(
             self.tokenizer.convert_ids_to_tokens(input_ids[answer_start:answer_end]))
 
+        print(answer)
+        print(type(answer))
+
         probabilities = []
 
         for start_score in answer_start_scores.cpu().detach().numpy():
             probabilities.append(self._compute_softmax(start_score))
 
-        return answer, probabilities
+        probability = (probabilities[0][answer_start] +
+                       probabilities[0][answer_end-1])/2
+
+        return answer, probability
 
     @staticmethod
     def _compute_softmax(scores):
