@@ -6,6 +6,8 @@ from transformers import BertConfig, BertTokenizerFast, TFBertModel
 
 from classifier.classifier import Classifier
 
+import numpy as np
+
 
 class TfClassifier(Classifier):
 
@@ -28,9 +30,9 @@ class TfClassifier(Classifier):
             self.model = load_model(model_path)
 
             self.model.compile(
-                optimizer=optimizer,
-                loss=loss,
-                metrics=metric)
+                optimizer=self.optimizer,
+                loss=self.loss,
+                metrics=self.metric)
 
         # build tokenizer from bert-base configs
         base_model = 'bert-base-uncased'
@@ -42,7 +44,7 @@ class TfClassifier(Classifier):
             pretrained_model_name_or_path=base_model, config=config)
 
     def predict(self, question, label_mappings):
-        tokens = tokenizer(
+        tokens = self.tokenizer(
             text=[question],
             add_special_tokens=True,
             max_length=self.max_length,
@@ -53,7 +55,9 @@ class TfClassifier(Classifier):
             return_attention_mask=True,
             verbose=False)
 
-        result = model.predict(
+        result = self.model.predict(
             x={'input_ids': tokens['input_ids'], 'attention_mask': tokens['attention_mask']})
 
-        return result
+        ranked_classes = np.argsort(result['classes'][0])
+
+        return ranked_classes[len(ranked_classes) - 1]
