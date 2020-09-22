@@ -7,7 +7,7 @@ from transformers import BertConfig, BertTokenizerFast, TFBertModel
 from classifier.classifier import Classifier
 
 
-class PtClassifier(Classifier):
+class TfClassifier(Classifier):
 
     def __init__(self, model_path=None, max_token_length=64):
         # loading existing model
