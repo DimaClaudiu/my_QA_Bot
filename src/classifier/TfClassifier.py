@@ -1,8 +1,10 @@
-from classifier.classifier import Classifier
-from transformers import TFBertModel,  BertConfig, BertTokenizerFast
-from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import CategoricalCrossentropy
 from tensorflow.keras.metrics import CategoricalAccuracy
+from tensorflow.keras.models import Model, load_model
+from tensorflow.keras.optimizers import Adam
+from transformers import BertConfig, BertTokenizerFast, TFBertModel
+
+from classifier.classifier import Classifier
 
 
 class PtClassifier(Classifier):
@@ -19,5 +21,12 @@ class PtClassifier(Classifier):
 
         self.metric = {'classes': CategoricalAccuracy(
             'accuracy')}
+
+        self.model = load_model(model_path)
+
+        self.model.compile(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metric)
 
     def predict(self, question, label_mappings):
