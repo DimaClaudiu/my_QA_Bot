@@ -9,8 +9,9 @@ from classifier.classifier import Classifier
 
 class PtClassifier(Classifier):
 
-    def __init__(self, model_path=None):
+    def __init__(self, model_path=None, max_token_length=64):
         # loading existing model
+        self.max_length = max_token_length
         if model_path:
             self.optimizer = Adam(
                 learning_rate=5e-05,
@@ -41,3 +42,18 @@ class PtClassifier(Classifier):
             pretrained_model_name_or_path=base_model, config=config)
 
     def predict(self, question, label_mappings):
+        tokens = tokenizer(
+            text=[question],
+            add_special_tokens=True,
+            max_length=self.max_length,
+            truncation=True,
+            padding=True,
+            return_tensors='tf',
+            return_token_type_ids=False,
+            return_attention_mask=True,
+            verbose=False)
+
+        result = model.predict(
+            x={'input_ids': tokens['input_ids'], 'attention_mask': tokens['attention_mask']})
+
+        return result
