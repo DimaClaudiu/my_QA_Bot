@@ -1,6 +1,9 @@
-from transformers import AutoTokenizer, TFAutoModelForQuestionAnswering
-import tensorflow as tf
 import math
+
+import tensorflow as tf
+from transformers import AutoTokenizer, TFAutoModelForQuestionAnswering
+
+from reader.reader import Reader
 
 
 class TfReader(Reader):
@@ -14,29 +17,26 @@ class TfReader(Reader):
 
         inputs = self.tokenizer(
             question, context, add_special_tokens=True, return_tensors="tf")
+
         input_ids = inputs["input_ids"].numpy()[0]
 
         text_tokens = self.tokenizer.convert_ids_to_tokens(input_ids)
+
         answer_start_scores, answer_end_scores = self.model(inputs)
 
-        answer_start = tf.argmax(
-            answer_start_scores, axis=1
-        ).numpy()[0]
-
-        answer_end = (tf.argmax(answer_end_scores) + 1).numpy()[0]
+        answer_start = tf.argmax(answer_start_scores, axis=1).numpy()[0]
+        answer_end = (tf.argmax(answer_end_scores, axis=1) + 1).numpy()[0]
 
         answer = self.tokenizer.convert_tokens_to_string(
             self.tokenizer.convert_ids_to_tokens(input_ids[answer_start:answer_end]))
 
         probabilities = []
 
-        for start_score in answer_start_scores.cpu().detach().numpy():
+        for start_score in answer_start_scores.cpu().numpy():
             probabilities.append(self._compute_softmax(start_score))
 
         probability = (probabilities[0][answer_start] +
                        probabilities[0][answer_end-1])/2
-
-        print(f'PT: {answer}')
 
         return answer, probability
 
