@@ -47,7 +47,7 @@ class TfClassifier(Classifier):
                           name='input_ids', dtype='int32')
 
         attention_mask = Input(shape=(self.max_length,),
-                            name='attention_mask', dtype='int32')
+                               name='attention_mask', dtype='int32')
         inputs = {'input_ids': input_ids, 'attention_mask': attention_mask}
 
         bert_model = bert(inputs)[1]
@@ -57,17 +57,21 @@ class TfClassifier(Classifier):
         pooled_output = dropout(bert_model, training=False)
 
         classes = Dense(units=num_classes, kernel_initializer=TruncatedNormal(
-    stddev=self.config.initializer_range), name='classes')(pooled_output)
+            stddev=self.config.initializer_range), name='classes')(pooled_output)
 
         outputs = {'classes': classes}
 
-        model = Model(inputs=inputs, outputs=outputs,
-              name=model_name)
+        self.model = Model(inputs=inputs, outputs=outputs,
+                           name=model_name)
 
-        model.summary()
+        self.model.summary()
 
+        self.model.compile(
+            optimizer=self.optimizer,
+            loss=self.loss,
+            metrics=self.metric)
 
-   def predict(self, question, label_mappings):
+    def predict(self, question, label_mappings):
         tokens = self.tokenizer(
             text=[question],
             add_special_tokens=True,
@@ -86,8 +90,7 @@ class TfClassifier(Classifier):
 
         return ranked_classes[len(ranked_classes) - 1]
 
-    @staticmethod
-    def load(model_path):
+    def load(self, model_path):
         self.model = load_model(model_path)
 
         self.model.compile(
