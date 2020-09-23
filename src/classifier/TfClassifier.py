@@ -101,6 +101,26 @@ class TfClassifier(Classifier):
 
         self.model.save(save_path)
 
+    def eval(self, text, labels):
+        test_x = self.tokenizer(
+            text=text,
+            add_special_tokens=True,
+            max_length=self.max_length,
+            truncation=True,
+            padding=True,
+            return_tensors='tf',
+            return_token_type_ids=False,
+            return_attention_mask=True,
+            verbose=True)
+
+        model_eval = self.model.evaluate(
+            x={'input_ids': test_x['input_ids'],
+                'attention_mask': test_x['attention_mask']},
+            y={'classes': labels}
+        )
+
+        return model_eval
+
     def predict(self, question):
         tokens = self.tokenizer(
             text=[question],
