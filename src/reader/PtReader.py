@@ -34,6 +34,8 @@ class PtReader(Reader):
         probability = (probabilities[0][answer_start] +
                        probabilities[0][answer_end-1])/2
 
+        print(f'PT: {answer}')
+
         return answer, probability
 
     @staticmethod
