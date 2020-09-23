@@ -77,7 +77,7 @@ class TfClassifier(Classifier):
             loss=self.loss,
             metrics=self.metric)
 
-    def train(self, text, labels, save_path):
+    def train(self, text, labels, save_path, val_split=0.2, batch_size=32, epochs=10):
         # tokenize inputs for training
         x = self.tokenizer(
             text=text,
@@ -95,13 +95,13 @@ class TfClassifier(Classifier):
             x={'input_ids': x['input_ids'],
                 'attention_mask': x['attention_mask']},
             y={'classes': labels},
-            validation_split=0.2,
-            batch_size=32,
-            epochs=1)
+            validation_split=val_split,
+            batch_size=batch_size,
+            epochs=epochs)
 
         self.model.save(save_path)
 
-    def predict(self, question, label_mappings):
+    def predict(self, question):
         tokens = self.tokenizer(
             text=[question],
             add_special_tokens=True,
