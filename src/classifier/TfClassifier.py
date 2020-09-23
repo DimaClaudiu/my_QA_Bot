@@ -14,7 +14,7 @@ import numpy as np
 
 class TfClassifier(Classifier):
 
-    def __init__(self, model_path=None, max_token_length=64):
+    def __init__(self, max_token_length=64):
         self.max_length = max_token_length
 
         self.optimizer = Adam(
@@ -32,11 +32,11 @@ class TfClassifier(Classifier):
         # build tokenizer from bert-base configs
         self.base_model = 'bert-base-uncased'
 
-        self.config = BertConfig.from_pretrained(base_model)
+        self.config = BertConfig.from_pretrained(self.base_model)
         self.config.output_hidden_states = False
 
         self.tokenizer = BertTokenizerFast.from_pretrained(
-            pretrained_model_name_or_path=base_model, config=config)
+            pretrained_model_name_or_path=self.base_model, config=self.config)
 
     def create(self, num_classes=10, model_name='BERT_MCC'):
         # load base model from transformers
@@ -91,7 +91,7 @@ class TfClassifier(Classifier):
             verbose=True)
 
         # Fit the model
-        model.fit(
+        self.model.fit(
             x={'input_ids': x['input_ids'],
                 'attention_mask': x['attention_mask']},
             y={'classes': labels},
@@ -99,7 +99,7 @@ class TfClassifier(Classifier):
             batch_size=32,
             epochs=1)
 
-        model.save(save_path)
+        self.model.save(save_path)
 
     def predict(self, question, label_mappings):
         tokens = self.tokenizer(
