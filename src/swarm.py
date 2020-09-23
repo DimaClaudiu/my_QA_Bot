@@ -4,9 +4,11 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 
 from classifier.StClassifier import StClassifier
+from classifier.TfClassifier import TfClassifier
 from ranker.tfidfRanker import TfidfRanker
 from reader.StReader import StReader
 from reader.PtReader import PtReader
+from reader.TfReader import TfReader
 
 
 def read_data(path, test_size_split=0.15):
@@ -29,15 +31,18 @@ def main():
 
     labels = get_labels()
 
-    classifier = StClassifier(model_path='models/MCT', num_labels=len(labels))
+    classifier = TfClassifier()
+    classifier.load('models/MCT/tfmct1/tfmlc.h5')
     ranker = TfidfRanker()
-    reader = PtReader(model_path='models/QA')
+    reader = TfReader(
+        model_path='models/QA/tf_bert_squad1')
 
     # Infer on any question
     print("Ready to roll")
     while True:
         question = input()
-        group = classifier.predict(question, labels)
+        label_id = classifier.predict(question)
+        group = labels[label_id]
         print(group)
 
         contexts = []
@@ -53,11 +58,12 @@ def main():
             ranked_contexts = ranker.rank(question, contexts, 5)
 
             for context in ranked_contexts:
+                print(context['text'])
                 answer, probability = reader.predict(
                     question, context['text'])
 
                 if answer != '':
-                    print(f'{answer} - {probability}\n')
+                    print(f'^^ {answer} - {probability} ^^\n')
 
 
 if __name__ == '__main__':
