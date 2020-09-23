@@ -77,6 +77,30 @@ class TfClassifier(Classifier):
             loss=self.loss,
             metrics=self.metric)
 
+    def train(self, text, labels, save_path):
+        # tokenize inputs for training
+        x = self.tokenizer(
+            text=text,
+            add_special_tokens=True,
+            max_length=self.max_length,
+            truncation=True,
+            padding=True,
+            return_tensors='tf',
+            return_token_type_ids=False,
+            return_attention_mask=True,
+            verbose=True)
+
+        # Fit the model
+        model.fit(
+            x={'input_ids': x['input_ids'],
+                'attention_mask': x['attention_mask']},
+            y={'classes': labels},
+            validation_split=0.2,
+            batch_size=32,
+            epochs=1)
+
+        model.save(save_path)
+
     def predict(self, question, label_mappings):
         tokens = self.tokenizer(
             text=[question],
