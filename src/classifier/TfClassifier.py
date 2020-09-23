@@ -39,13 +39,18 @@ class TfClassifier(Classifier):
             pretrained_model_name_or_path=base_model, config=config)
 
     def create(self, num_classes=10, model_name='BERT_MCC'):
+        # load base model from transformers
         transformer_model = TFBertModel.from_pretrained(
             self.base_model, config=self.config)
+
+        # take just bert base
         bert = transformer_model.layers[0]
 
+        # create inputs
         input_ids = Input(shape=(self.max_length,),
                           name='input_ids', dtype='int32')
 
+        # attention mask used when input is padded
         attention_mask = Input(shape=(self.max_length,),
                                name='attention_mask', dtype='int32')
         inputs = {'input_ids': input_ids, 'attention_mask': attention_mask}
@@ -56,6 +61,7 @@ class TfClassifier(Classifier):
                           name='pooled_output')
         pooled_output = dropout(bert_model, training=False)
 
+        # creating output based on number of classes
         classes = Dense(units=num_classes, kernel_initializer=TruncatedNormal(
             stddev=self.config.initializer_range), name='classes')(pooled_output)
 
