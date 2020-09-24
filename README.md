@@ -81,12 +81,12 @@ So far, the pipeline is mainly split in:
 | ------------------------------ | ---------------------------- |
 | 0.6720663905143738             | 0.7869972586631775           |
 
-    - train/test split: 0.2
-    - epochs: 6
-    - batch_size: 24
+     train/test split: 0.2
+     epochs: 6
+     batch_size: 24
 
 
-2. **Ranker**: ****N/A
+2. **Ranker**: N/A
 
 
 
@@ -97,9 +97,9 @@ So far, the pipeline is mainly split in:
 | ------------------------------ | ---------------------------- |
 | 0.611580415368080158           | 83.6129032258064448          |
 
-    - train/test split: 0.2
-    - epoch 3
-    - batch_size: 8
+     train/test split: 0.2
+     epoch 3
+     batch_size: 8
     
 ----------
 ## References:
