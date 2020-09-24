@@ -31,7 +31,8 @@ class TfidfRanker(Ranker):
         )
 
         df_sliced = df.loc[indices_and_scores.keys()]
-        df_sliced = df_sliced[:top_k]
+        if top_k != 0:
+            df_sliced = df_sliced[:top_k]
 
         conte = list(df_sliced.text.values)
         meta_data = [{"date": row["date"]} for _, row in df_sliced.iterrows()]
