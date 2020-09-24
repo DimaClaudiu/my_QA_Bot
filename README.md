@@ -1,7 +1,7 @@
 # QA Pipeline
 Natural language search through a large knowledge base(KB).
 
-![](https://paper-attachments.dropbox.com/s_60F722FD326451DB6F40490B2F3931616DFAE97900230B4966BBE26C41DE7EDA_1600975194750_schem-small.png)
+![](schema-small.png)
 
 ## Components
 
