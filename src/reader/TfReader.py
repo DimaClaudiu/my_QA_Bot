@@ -102,7 +102,6 @@ class TfReader(Reader):
             x, (y['start_positions'], y['end_positions'])))
 
         loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        # self.model.distilbert.return_dict = False
 
         # fit model
         optimizer = tf.keras.optimizers.Adam(learning_rate=5e-5)
