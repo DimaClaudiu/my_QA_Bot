@@ -70,8 +70,6 @@ class TfClassifier(Classifier):
         self.model = Model(inputs=inputs, outputs=outputs,
                            name=model_name)
 
-        self.model.summary()
-
         self.model.compile(
             optimizer=self.optimizer,
             loss=self.loss,
@@ -116,7 +114,7 @@ class TfClassifier(Classifier):
         model_eval = self.model.evaluate(
             x={'input_ids': test_x['input_ids'],
                 'attention_mask': test_x['attention_mask']},
-            y={'classes': labels}
+            y={'classes': labels}, batch_size=2
         )
 
         return model_eval
