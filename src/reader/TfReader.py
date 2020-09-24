@@ -1,5 +1,6 @@
 import math
 
+import re
 import tensorflow as tf
 from transformers import AutoTokenizer, TFAutoModelForQuestionAnswering
 from transformers import TFDistilBertForQuestionAnswering
@@ -13,7 +14,6 @@ class TfReader(Reader):
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
         self.model = TFAutoModelForQuestionAnswering.from_pretrained(
             model_path)
-        self.model.summary()
 
     def predict(self, question, context, best_n=3):
 
@@ -31,6 +31,8 @@ class TfReader(Reader):
 
         answer = self.tokenizer.convert_tokens_to_string(
             self.tokenizer.convert_ids_to_tokens(input_ids[answer_start:answer_end]))
+
+        answer = self._clean_answer(answer, question)
 
         probabilities = []
 
@@ -108,6 +110,16 @@ class TfReader(Reader):
         self.model.compile(optimizer=optimizer, loss=loss)
         self.model.evaluate(val_dataset.shuffle(
             1000).batch(batch_size), batch_size=batch_size)
+
+    @staticmethod
+    def _clean_answer(answer, question):
+        answer = answer.replace('[CLS]', '')
+        answer = answer.replace('[SEP]', '')
+        answer = answer.replace('?', '')
+        answer = answer.replace(question[:-1].lower(), '')
+        answer = answer.strip()
+
+        return answer
 
     @staticmethod
     def _compute_softmax(scores):
