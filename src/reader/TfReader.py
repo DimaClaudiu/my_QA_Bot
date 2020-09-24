@@ -79,6 +79,40 @@ class TfReader(Reader):
         self.model.fit(train_dataset.shuffle(
             1000).batch(batch_size), epochs=epochs, batch_size=batch_size)
 
+    def eval(self, val_contexts, val_questions, val_answers, base_model='distilbert-base-uncased', batch_size=10):
+        tokenizer = DistilBertTokenizerFast.from_pretrained(
+            base_model)
+
+        self._add_end_idx(val_answers, val_contexts)
+
+        val_encodings = tokenizer(val_contexts, val_questions,
+                                  truncation=True, padding=True)
+
+        self._add_token_positions(val_encodings, val_answers)
+
+        val_dataset = tf.data.Dataset.from_tensor_slices((
+            {key: val_encodings[key]
+                for key in ['input_ids', 'attention_mask']},
+            {key: val_encodings[key]
+                for key in ['start_positions', 'end_positions']}
+        ))
+
+        self.model = TFDistilBertForQuestionAnswering.from_pretrained(
+            base_model)
+
+        # Keras will expect a tuple when dealing with labels
+        val_dataset = val_dataset.map(lambda x, y: (
+            x, (y['start_positions'], y['end_positions'])))
+
+        loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        self.model.distilbert.return_dict = False
+
+        # fit model
+        optimizer = tf.keras.optimizers.Adam(learning_rate=5e-5)
+        self.model.compile(optimizer=optimizer, loss=loss)
+        self.model.evaluate(val_dataset.shuffle(
+            1000).batch(batch_size), batch_size=batch_size)
+
     @staticmethod
     def _compute_softmax(scores):
         max_score = None
