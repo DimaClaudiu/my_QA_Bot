@@ -34,11 +34,12 @@ class TfidfRanker(Ranker):
         if top_k != 0:
             df_sliced = df_sliced[:top_k]
 
-        conte = list(df_sliced.text.values)
-        meta_data = [{"date": row["date"]} for _, row in df_sliced.iterrows()]
+        # print(df_sliced)
 
-        ranked_contexts = []
-        for para, meta in zip(contexts, meta_data):
-            ranked_contexts.append(para)
+        # meta_data = [{"date": row["date"]} for _, row in df_sliced.iterrows()]
 
-        return ranked_contexts
+        # ranked_contexts = []
+        # for para, meta in zip(contexts, meta_data):
+        #     ranked_contexts.append(para)
+
+        return df_sliced
