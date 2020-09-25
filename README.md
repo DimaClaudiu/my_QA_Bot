@@ -18,7 +18,7 @@ So far, the pipeline is mainly split in:
     For now, they are stored in independent text files. But any database solution can easily replace this component.
 ----------
 2. **Classifier**: A model that helps narrow the searching field by offering the most likely sub-domain of any given question.
-    Examples:
+    Examples:<br>
     Q: *What's the snakes' favorite song?*
     A: *MUSIC*
     
