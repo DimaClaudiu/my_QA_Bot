@@ -26,7 +26,7 @@ So far, the pipeline is mainly split in:
     A: *ANDROID APP*
 
 
-    For now, I'm using a base RoBERTa model, fine-tunned for multiclass-classification.
+    For now, I'm using a base BERT model, modified and fine-tunned for multiclass-classification.
     
     For training, I used [News Category Dataset v2](https://www.kaggle.com/rmisra/news-category-dataset), taking just the first 10 most popular categories. The dataset fits nicely because the data is quite sparse and out of context (similar to text chats, where conversations are short and incomplete) and the classes are alose quite imbalanced (also similar to real-world data).
     The data was cleaned before training, since common words would give an unfair advantage to larger(in size of text) classes.
@@ -53,14 +53,13 @@ So far, the pipeline is mainly split in:
 
 
     It receives a context and a question and extracts the answer.
-    This model is also a fine-tunned RoBERTa-base for Question-Answering.
+    This model is a base ELECTRA, modified and find-tunned for Question-Answering.
     
     Initially, I tried a pre-trained BERT model, trained on SQuAD 1.1, the model was great at extracting the answers when those existed, but when the answer wasn't there, it was really confident in giving the wrong ones :(
     
     
     
     SQUaD 2.0 addresses these issues by having impossible answers, pairs of , where the questions simply can't be answered, and the model should output blank ''. 
-    So I trained a fine-tuned RoBERTa for this downstream task on squad2.
     
     The model performs great, but it's quite slow. That's why the previous components try to filter out as much junk as possible for this one.
 ----------
