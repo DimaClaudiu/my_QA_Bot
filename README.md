@@ -19,11 +19,11 @@ So far, the pipeline is mainly split in:
 ----------
 2. **Classifier**: A model that helps narrow the searching field by offering the most likely sub-domain of any given question.
     Examples:<br>
-    Q: *What's the snakes' favorite song?*
-    A: *MUSIC*
+    Q: *What's the snakes' favorite song?*<br>
+    A: *MUSIC*<br>
     
-    Q: *Where can I get the APK for Hubgets?*
-    A: *ANDROID APP*
+    Q: *Where can I get the APK for Hubgets?*<br>
+    A: *ANDROID APP*<br>
 
 
     For now, I'm using a base BERT model, modified and fine-tunned for multiclass-classification.
@@ -42,9 +42,9 @@ So far, the pipeline is mainly split in:
     
     A different approach I'm currently experimenting with is using a model for Dense Passage Retrieval, as described [here](https://arxiv.org/abs/2004.04906). This will use dense embeddings of the contexts and question, and score the similarity using the dot product of the embeddings, instead of cosine similarity.
     
-    This will allow finding candidates based on conceptual overlap, not just semantic similarities. For example:
-    C: *...I love bananas because they are yellow...*
-    Q: *When did we talk about fruits?*
+    This will allow finding candidates based on conceptual overlap, not just semantic similarities. For example:<br>
+    C: *...I love bananas because they are yellow...*<br>
+    Q: *When did we talk about fruits?*<br>
     
     This model should score that context pretty highly since a banana is indeed a fruit.
     BM25 could be also used for a fast and reliable ranker.
